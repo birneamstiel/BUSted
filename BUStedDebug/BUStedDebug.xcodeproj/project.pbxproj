@@ -14,6 +14,7 @@
 		8041CE191DF2E07300C11BA2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8041CE181DF2E07300C11BA2 /* Assets.xcassets */; };
 		8041CE1C1DF2E07300C11BA2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8041CE1A1DF2E07300C11BA2 /* LaunchScreen.storyboard */; };
 		8041CE251DF2E13900C11BA2 /* iBeacon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8041CE241DF2E13900C11BA2 /* iBeacon.png */; };
+		8041CE281DF2FCFB00C11BA2 /* KontaktSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8041CE271DF2FCFB00C11BA2 /* KontaktSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		8041CE1B1DF2E07300C11BA2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8041CE1D1DF2E07300C11BA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8041CE241DF2E13900C11BA2 /* iBeacon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iBeacon.png; sourceTree = "<group>"; };
+		8041CE271DF2FCFB00C11BA2 /* KontaktSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KontaktSDK.framework; path = Carthage/Build/iOS/KontaktSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8041CE281DF2FCFB00C11BA2 /* KontaktSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +49,7 @@
 			children = (
 				8041CE0B1DF2E07300C11BA2 /* BUStedDebug */,
 				8041CE0A1DF2E07300C11BA2 /* Products */,
+				8041CE261DF2FCFA00C11BA2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -90,6 +94,14 @@
 			name = Images;
 			sourceTree = "<group>";
 		};
+		8041CE261DF2FCFA00C11BA2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8041CE271DF2FCFB00C11BA2 /* KontaktSDK.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -100,6 +112,7 @@
 				8041CE051DF2E07300C11BA2 /* Sources */,
 				8041CE061DF2E07300C11BA2 /* Frameworks */,
 				8041CE071DF2E07300C11BA2 /* Resources */,
+				8041CE291DF2FD1900C11BA2 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -157,6 +170,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8041CE291DF2FD1900C11BA2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/KontaktSDK.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8041CE051DF2E07300C11BA2 /* Sources */ = {
@@ -286,11 +316,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = CDBRASB58Y;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = BUStedDebug/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.lukas-fritzsche.BUStedDebug";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -299,11 +334,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = CDBRASB58Y;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = BUStedDebug/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.lukas-fritzsche.BUStedDebug";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

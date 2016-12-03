@@ -10,6 +10,10 @@
 
 @interface ViewController : UIViewController
 
+- (IBAction)ButtonPressed:(id)sender;
+@property (weak, nonatomic) IBOutlet UITextView *beaconText1;
+@property (weak, nonatomic) IBOutlet UITextView *beaconText2;
+@property (weak, nonatomic) IBOutlet UITextView *beaconText3;
 
 @end
 
