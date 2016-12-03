@@ -8,22 +8,53 @@
 
 #import "ViewController.h"
 #import <KontaktSDK/KontaktSDK.h>
+#include <math.h>
+#include <CoreLocation/CoreLocation.h>
 
-@interface ViewController () <KTKBeaconManagerDelegate>
+#define BEACON_18CSN_MAJOR 42563
+#define BEACON_18CSN_MINOR 20278
+
+#define BEACON_XPQE_MAJOR 44025
+#define BEACON_XPQE_MINOR 64030
+
+#define BEACON_0JNW_MAJOR 21307
+#define BEACON_0JNW_MINOR 26964
+
+#define BEACON_F905_MAJOR 38605
+#define BEACON_F905_MINOR 63779
+
+@interface ViewController () <KTKBeaconManagerDelegate, CLLocationManagerDelegate>
 
 @property KTKBeaconManager *beaconManager;
+
 
 @end
 
 @implementation ViewController {
-    
+    CLLocationManager *locationManager;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     //self.statusText.delegate = self;
+    locationManager = [[CLLocationManager alloc]init];
+    locationManager.delegate = self;
 
+    if([CLLocationManager headingAvailable]) {
+        [locationManager startUpdatingHeading];
+    }
+}
+
+- (void)locationManager:(CLLocationManager*)manager didUpdateHeading:(CLHeading*)newHeading
+{
+    // If the accuracy is valid, process the event.
+    if (newHeading.headingAccuracy > 0){
+        CLLocationDirection theHeading = newHeading.magneticHeading;
+        self.compassLabel.text = [NSString stringWithFormat: @"%.03f°", theHeading];
+    }
+    
+    return;
 }
 
 - (void)textViewDidChange:(UITextView *)textView
@@ -56,10 +87,10 @@
     }
     
     NSUUID *myProximityUUID = [[NSUUID alloc] initWithUUIDString:@"f7826da6-4fa2-4e98-8024-bc5b71e0893e"];
-    KTKBeaconRegion *region8CSN = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:42563 minor:20278 identifier:@"BUSted beacon reagion1"];
-    KTKBeaconRegion *regionXpQe = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:44025 minor:64030 identifier:@"BUSted beacon reagion2"];
-    KTKBeaconRegion *region0jnw = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:21307 minor:26964 identifier:@"BUSted beacon reagion3"];
-    KTKBeaconRegion *regionf905 = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:38605 minor:63779 identifier:@"BUSted beacon reagion4"];
+    KTKBeaconRegion *region8CSN = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_18CSN_MAJOR minor:BEACON_18CSN_MINOR identifier:@"BUSted beacon reagion1"];
+    KTKBeaconRegion *regionXpQe = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_XPQE_MAJOR minor:BEACON_XPQE_MINOR identifier:@"BUSted beacon reagion2"];
+    KTKBeaconRegion *region0jnw = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_0JNW_MAJOR minor:BEACON_0JNW_MINOR identifier:@"BUSted beacon reagion3"];
+    KTKBeaconRegion *regionf905 = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_F905_MAJOR minor:BEACON_F905_MINOR identifier:@"BUSted beacon reagion4"];
 
     switch ([KTKBeaconManager locationAuthorizationStatus]) {
             // Non-relevant cases are cut
@@ -111,16 +142,16 @@
     
     for(CLBeacon * beacon in beacons) {
         switch ([beacon.major intValue]) {
-            case 42563:
+            case BEACON_18CSN_MAJOR:
                 self.beaconText1.text = [[NSString stringWithFormat:@"%.03f \n", beacon.accuracy] stringByAppendingString: self.beaconText1.text ];
                 break;
-            case 44025:
+            case BEACON_XPQE_MAJOR:
                 self.beaconText2.text = [[NSString stringWithFormat:@"%.03f \n", beacon.accuracy] stringByAppendingString: self.beaconText2.text];
                 break;
-            case 21307:
+            case BEACON_0JNW_MAJOR:
                 self.beaconText3.text = [[NSString stringWithFormat:@"%.03f \n", beacon.accuracy] stringByAppendingString: self.beaconText3.text];
                 break;
-            case 38605:
+            case BEACON_F905_MAJOR:
                 self.beaconText4.text = [[NSString stringWithFormat:@"%.03f \n", beacon.accuracy] stringByAppendingString: self.beaconText4.text];
                 break;
 
@@ -129,6 +160,21 @@
     }
     
     
+}
+
+- (double) calculateAccuracyWithRssI:(double) rssi {
+    if (rssi == 0) {
+        return -1.0; // if we cannot determine accuracy, return -1.
+    }
+    
+    double ratio = rssi*1.0/3;
+    if (ratio < 1.0) {
+        return pow(ratio,10);
+    }
+    else {
+        double accuracy =  (0.89976) * pow(ratio,7.7095) + 0.111;
+        return accuracy;
+    }
 }
 
 @end
