@@ -16,6 +16,10 @@
 		8041CE1C1DF2E07300C11BA2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8041CE1A1DF2E07300C11BA2 /* LaunchScreen.storyboard */; };
 		8041CE251DF2E13900C11BA2 /* iBeacon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8041CE241DF2E13900C11BA2 /* iBeacon.png */; };
 		8041CE281DF2FCFB00C11BA2 /* KontaktSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8041CE271DF2FCFB00C11BA2 /* KontaktSDK.framework */; };
+		8041CE2C1DF3593500C11BA2 /* BUSArrowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8041CE2B1DF3593500C11BA2 /* BUSArrowViewController.m */; };
+		8041CE2F1DF35ADF00C11BA2 /* BUSArrowIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8041CE2E1DF35ADF00C11BA2 /* BUSArrowIndicatorView.m */; };
+		8041CE331DF35E4E00C11BA2 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8041CE321DF35E4E00C11BA2 /* arrow.png */; };
+		8041CE351DF3602F00C11BA2 /* arrow_smaller_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 8041CE341DF3602F00C11BA2 /* arrow_smaller_black.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +37,12 @@
 		8041CE1D1DF2E07300C11BA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8041CE241DF2E13900C11BA2 /* iBeacon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iBeacon.png; sourceTree = "<group>"; };
 		8041CE271DF2FCFB00C11BA2 /* KontaktSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KontaktSDK.framework; path = Carthage/Build/iOS/KontaktSDK.framework; sourceTree = "<group>"; };
+		8041CE2A1DF3593500C11BA2 /* BUSArrowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BUSArrowViewController.h; sourceTree = "<group>"; };
+		8041CE2B1DF3593500C11BA2 /* BUSArrowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BUSArrowViewController.m; sourceTree = "<group>"; };
+		8041CE2D1DF35ADF00C11BA2 /* BUSArrowIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BUSArrowIndicatorView.h; sourceTree = "<group>"; };
+		8041CE2E1DF35ADF00C11BA2 /* BUSArrowIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BUSArrowIndicatorView.m; sourceTree = "<group>"; };
+		8041CE321DF35E4E00C11BA2 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
+		8041CE341DF3602F00C11BA2 /* arrow_smaller_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_smaller_black.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +88,10 @@
 				8041CE0C1DF2E07300C11BA2 /* Supporting Files */,
 				131835741DF3555600577E1B /* BUSBeacon.h */,
 				131835751DF3555600577E1B /* BUSBeacon.m */,
+				8041CE2A1DF3593500C11BA2 /* BUSArrowViewController.h */,
+				8041CE2B1DF3593500C11BA2 /* BUSArrowViewController.m */,
+				8041CE2D1DF35ADF00C11BA2 /* BUSArrowIndicatorView.h */,
+				8041CE2E1DF35ADF00C11BA2 /* BUSArrowIndicatorView.m */,
 			);
 			path = BUStedDebug;
 			sourceTree = "<group>";
@@ -94,7 +108,9 @@
 		8041CE231DF2E12B00C11BA2 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8041CE321DF35E4E00C11BA2 /* arrow.png */,
 				8041CE241DF2E13900C11BA2 /* iBeacon.png */,
+				8041CE341DF3602F00C11BA2 /* arrow_smaller_black.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -167,6 +183,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8041CE351DF3602F00C11BA2 /* arrow_smaller_black.png in Resources */,
+				8041CE331DF35E4E00C11BA2 /* arrow.png in Resources */,
 				8041CE1C1DF2E07300C11BA2 /* LaunchScreen.storyboard in Resources */,
 				8041CE191DF2E07300C11BA2 /* Assets.xcassets in Resources */,
 				8041CE251DF2E13900C11BA2 /* iBeacon.png in Resources */,
@@ -200,7 +218,9 @@
 			files = (
 				131835761DF3555600577E1B /* BUSBeacon.m in Sources */,
 				8041CE141DF2E07300C11BA2 /* ViewController.m in Sources */,
+				8041CE2F1DF35ADF00C11BA2 /* BUSArrowIndicatorView.m in Sources */,
 				8041CE111DF2E07300C11BA2 /* AppDelegate.m in Sources */,
+				8041CE2C1DF3593500C11BA2 /* BUSArrowViewController.m in Sources */,
 				8041CE0E1DF2E07300C11BA2 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *beaconText2;
 @property (weak, nonatomic) IBOutlet UITextView *beaconText3;
 @property (weak, nonatomic) IBOutlet UITextView *beaconText4;
+@property (weak, nonatomic) IBOutlet UILabel *compassLabel;
 
 @end
 
