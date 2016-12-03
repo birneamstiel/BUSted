@@ -17,4 +17,6 @@ alpha:1.0]
 
 @interface BUSArrowIndicatorView : UIView
 
+- (void)rotateArrowBy:(CGFloat) degrees;
+
 @end

@@ -8,19 +8,47 @@
 
 #import "BUSArrowViewController.h"
 #import "BUSArrowIndicatorView.h"
+#include <CoreLocation/CoreLocation.h>
 
-@interface BUSArrowViewController ()
-@property UIView * circleView;
+
+
+@interface BUSArrowViewController () <CLLocationManagerDelegate>
+@property BUSArrowIndicatorView * circleView;
 @end
 
 @implementation BUSArrowViewController
+
+CLLocationManager *locationManager;
+int frames = 0;
+int frameLimit = 60;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setBackgroundColor:UIColorFromRGB(0x393939)];
     
     [self setupArrowView];
+    
+    locationManager = [[CLLocationManager alloc]init];
+    locationManager.delegate = self;
+    
+    if([CLLocationManager headingAvailable]) {
+        [locationManager startUpdatingHeading];
+    }
 }
+
+- (void)locationManager:(CLLocationManager*)manager didUpdateHeading:(CLHeading*)newHeading
+{
+    // If the accuracy is valid, process the event.
+    if (newHeading.headingAccuracy > 0){
+        CLLocationDirection theHeading = newHeading.magneticHeading;
+        [self.circleView rotateArrowBy:theHeading];
+        frames = 0;
+    }
+    
+    frames++;
+    return;
+}
+
 
 - (void) setupArrowView {
     self.circleView = [[BUSArrowIndicatorView alloc] initWithFrame:CGRectMake(20,20,300,300)];
@@ -68,7 +96,10 @@
     centerY.active = YES;
     width.active = YES;
     height.active = YES;
+    
 }
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
