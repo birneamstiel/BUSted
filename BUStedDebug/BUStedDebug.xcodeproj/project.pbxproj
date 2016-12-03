@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		131835761DF3555600577E1B /* BUSBeacon.m in Sources */ = {isa = PBXBuildFile; fileRef = 131835751DF3555600577E1B /* BUSBeacon.m */; };
 		8041CE0E1DF2E07300C11BA2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8041CE0D1DF2E07300C11BA2 /* main.m */; };
 		8041CE111DF2E07300C11BA2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8041CE101DF2E07300C11BA2 /* AppDelegate.m */; };
 		8041CE141DF2E07300C11BA2 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8041CE131DF2E07300C11BA2 /* ViewController.m */; };
@@ -18,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		131835741DF3555600577E1B /* BUSBeacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BUSBeacon.h; sourceTree = "<group>"; };
+		131835751DF3555600577E1B /* BUSBeacon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BUSBeacon.m; sourceTree = "<group>"; };
 		8041CE091DF2E07300C11BA2 /* BUStedDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BUStedDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8041CE0D1DF2E07300C11BA2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8041CE0F1DF2E07300C11BA2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -73,6 +76,8 @@
 				8041CE1A1DF2E07300C11BA2 /* LaunchScreen.storyboard */,
 				8041CE1D1DF2E07300C11BA2 /* Info.plist */,
 				8041CE0C1DF2E07300C11BA2 /* Supporting Files */,
+				131835741DF3555600577E1B /* BUSBeacon.h */,
+				131835751DF3555600577E1B /* BUSBeacon.m */,
 			);
 			path = BUStedDebug;
 			sourceTree = "<group>";
@@ -193,6 +198,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				131835761DF3555600577E1B /* BUSBeacon.m in Sources */,
 				8041CE141DF2E07300C11BA2 /* ViewController.m in Sources */,
 				8041CE111DF2E07300C11BA2 /* AppDelegate.m in Sources */,
 				8041CE0E1DF2E07300C11BA2 /* main.m in Sources */,

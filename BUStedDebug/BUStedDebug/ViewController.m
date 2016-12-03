@@ -8,10 +8,14 @@
 
 #import "ViewController.h"
 #import <KontaktSDK/KontaktSDK.h>
+#import "BUSBeacon.h"
 
 @interface ViewController () <KTKBeaconManagerDelegate>
 
 @property KTKBeaconManager *beaconManager;
+
+// ID of BUSBeacon as NSString --> BUSBeacon
+@property NSMutableDictionary *beacons;
 
 @end
 
@@ -21,9 +25,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    //self.statusText.delegate = self;
-
+    self.beacons = [[NSMutableDictionary alloc] init];
 }
 
 - (void)textViewDidChange:(UITextView *)textView
@@ -83,8 +85,7 @@
 }
 
 - (void)beaconManager:(KTKBeaconManager *)manager didStartMonitoringForRegion:(__kindof KTKBeaconRegion *)region {
-    // Do something when monitoring for a particular
-    // region is successfully initiated
+    
 }
 
 - (void)beaconManager:(KTKBeaconManager *)manager monitoringDidFailForRegion:(__kindof KTKBeaconRegion *)region withError:(NSError *)error {
@@ -110,24 +111,58 @@
 - (void)beaconManager:(KTKBeaconManager*)manager didRangeBeacons:(NSArray <CLBeacon *>*)beacons inRegion:(__kindof KTKBeaconRegion*)region {
     
     for(CLBeacon * beacon in beacons) {
-        switch ([beacon.major intValue]) {
-            case 42563:
-                self.beaconText1.text = [[NSString stringWithFormat:@"%.03f \n", beacon.accuracy] stringByAppendingString: self.beaconText1.text ];
-                break;
-            case 44025:
-                self.beaconText2.text = [[NSString stringWithFormat:@"%.03f \n", beacon.accuracy] stringByAppendingString: self.beaconText2.text];
-                break;
-            case 21307:
-                self.beaconText3.text = [[NSString stringWithFormat:@"%.03f \n", beacon.accuracy] stringByAppendingString: self.beaconText3.text];
-                break;
-            case 38605:
-                self.beaconText4.text = [[NSString stringWithFormat:@"%.03f \n", beacon.accuracy] stringByAppendingString: self.beaconText4.text];
-                break;
-
+        BUSBeacon * busBeacon;
+        
+        if ([self.beacons objectForKey: [beacon.major stringValue]]) {
+            busBeacon = [self.beacons objectForKey: [beacon.major stringValue]];
+            busBeacon.accuracy = [NSNumber numberWithDouble:beacon.accuracy];
+        } else {
+            busBeacon = [[BUSBeacon alloc] init];
+            busBeacon.id = [beacon.major stringValue];
+            busBeacon.accuracy = [NSNumber numberWithDouble:beacon.accuracy];
+            
+            // Add neighbours
+            switch ([beacon.major intValue]) {
+                case 42563:
+                    busBeacon.neighbours = [[NSMutableDictionary alloc] init];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:242] forKey: @"21307"];
+                case 44025:
+                    busBeacon.neighbours = [[NSMutableDictionary alloc] init];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:88] forKey: @"21307"];
+                case 38605:
+                    busBeacon.neighbours = [[NSMutableDictionary alloc] init];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:352] forKey: @"21307"];
+                    break;
+                case 21307:
+                    busBeacon.neighbours = [[NSMutableDictionary alloc] init];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:67] forKey: @"42563"];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:88] forKey: @"44025"];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:167] forKey: @"38605"];
+                    break;
+            }
+            
+            [self.beacons setObject:busBeacon forKey: [beacon.major stringValue]];
         }
         
+        switch ([busBeacon.id intValue]) {
+            case 42563:
+                // Debug
+                self.beaconText1.text = [[NSString stringWithFormat:@"%.02f \n", [busBeacon.accuracy doubleValue]] stringByAppendingString: self.beaconText1.text ];
+                break;
+            case 44025:
+                //Debug
+                self.beaconText2.text = [[NSString stringWithFormat:@"%.02f \n", [busBeacon.accuracy doubleValue]] stringByAppendingString: self.beaconText2.text];
+                break;
+            case 21307:
+                //Debug
+                self.beaconText3.text = [[NSString stringWithFormat:@"%.02f \n", [busBeacon.accuracy doubleValue]] stringByAppendingString: self.beaconText3.text];
+                break;
+            case 38605:
+                //Debug
+                self.beaconText4.text = [[NSString stringWithFormat:@"%.02f \n", [busBeacon.accuracy doubleValue]] stringByAppendingString: self.beaconText4.text];
+                break;
+        }
     }
-    
     
 }
 
