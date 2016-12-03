@@ -144,25 +144,33 @@
             [self.beacons setObject:busBeacon forKey: [beacon.major stringValue]];
         }
         
-        switch ([busBeacon.id intValue]) {
-            case 42563:
-                // Debug
-                self.beaconText1.text = [[NSString stringWithFormat:@"%.02f \n", [busBeacon.accuracy doubleValue]] stringByAppendingString: self.beaconText1.text ];
-                break;
-            case 44025:
-                //Debug
-                self.beaconText2.text = [[NSString stringWithFormat:@"%.02f \n", [busBeacon.accuracy doubleValue]] stringByAppendingString: self.beaconText2.text];
-                break;
-            case 21307:
-                //Debug
-                self.beaconText3.text = [[NSString stringWithFormat:@"%.02f \n", [busBeacon.accuracy doubleValue]] stringByAppendingString: self.beaconText3.text];
-                break;
-            case 38605:
-                //Debug
-                self.beaconText4.text = [[NSString stringWithFormat:@"%.02f \n", [busBeacon.accuracy doubleValue]] stringByAppendingString: self.beaconText4.text];
-                break;
-        }
+        // Debug tab
+        [self printAccuracy: busBeacon];
+        
+        // Direction tab
+        [self calculateNewDirection];
     }
+    
+}
+
+- (void)printAccuracy:(BUSBeacon*)busBeacon {
+    switch ([busBeacon.id intValue]) {
+        case 42563:
+            self.beaconText1.text = [[NSString stringWithFormat:@"%.02f \n", [busBeacon.accuracy doubleValue]] stringByAppendingString: self.beaconText1.text ];
+            break;
+        case 44025:
+            self.beaconText2.text = [[NSString stringWithFormat:@"%.02f \n", [busBeacon.accuracy doubleValue]] stringByAppendingString: self.beaconText2.text];
+            break;
+        case 21307:
+            self.beaconText3.text = [[NSString stringWithFormat:@"%.02f \n", [busBeacon.accuracy doubleValue]] stringByAppendingString: self.beaconText3.text];
+            break;
+        case 38605:
+            self.beaconText4.text = [[NSString stringWithFormat:@"%.02f \n", [busBeacon.accuracy doubleValue]] stringByAppendingString: self.beaconText4.text];
+            break;
+    }
+}
+
+- (void)calculateNewDirection {
     
 }
 
