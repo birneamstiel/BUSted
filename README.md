@@ -1,2 +1,2 @@
 # BUSted
-Guiding assistant for train and subway statins.
+Guiding assistant for train and subway stations using iBeacon technology.
