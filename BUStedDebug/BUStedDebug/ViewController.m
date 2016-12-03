@@ -59,6 +59,7 @@
     KTKBeaconRegion *region8CSN = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:42563 minor:20278 identifier:@"BUSted beacon reagion1"];
     KTKBeaconRegion *regionXpQe = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:44025 minor:64030 identifier:@"BUSted beacon reagion2"];
     KTKBeaconRegion *region0jnw = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:21307 minor:26964 identifier:@"BUSted beacon reagion3"];
+    KTKBeaconRegion *regionf905 = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:38605 minor:63779 identifier:@"BUSted beacon reagion4"];
 
     switch ([KTKBeaconManager locationAuthorizationStatus]) {
             // Non-relevant cases are cut
@@ -72,6 +73,9 @@
                 
                 [self.beaconManager startMonitoringForRegion:region0jnw];
                 [self.beaconManager startRangingBeaconsInRegion:region0jnw];
+                
+                [self.beaconManager startMonitoringForRegion:regionf905];
+                [self.beaconManager startRangingBeaconsInRegion:regionf905];
             }
             break;
     }
@@ -115,6 +119,9 @@
                 break;
             case 21307:
                 self.beaconText3.text = [[NSString stringWithFormat:@"%.03f \n", beacon.accuracy] stringByAppendingString: self.beaconText3.text];
+                break;
+            case 38605:
+                self.beaconText4.text = [[NSString stringWithFormat:@"%.03f \n", beacon.accuracy] stringByAppendingString: self.beaconText4.text];
                 break;
 
         }

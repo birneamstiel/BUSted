@@ -22,7 +22,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="488" id="80C-u8-ade"/>
-                                    <constraint firstAttribute="width" constant="92" id="gZJ-3n-JSA"/>
+                                    <constraint firstAttribute="width" constant="60" id="gZJ-3n-JSA"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -31,7 +31,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="488" id="bFT-xH-MKF"/>
-                                    <constraint firstAttribute="width" constant="92" id="h5r-Rm-jm4"/>
+                                    <constraint firstAttribute="width" constant="60" id="h5r-Rm-jm4"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -40,7 +40,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="488" id="RQS-Bv-gCf"/>
-                                    <constraint firstAttribute="width" constant="92" id="TLL-2j-e3T"/>
+                                    <constraint firstAttribute="width" constant="60" id="TLL-2j-e3T"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -55,7 +55,7 @@
                                     <action selector="ButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XZX-KK-PpE"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8CSN      XpQe      0jnw" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U5b-ec-gup">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8CSN    XpQe   0jnw    f905" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U5b-ec-gup">
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="fta-LP-UEz"/>
                                     <constraint firstAttribute="width" constant="288" id="hce-Ve-uXW"/>
@@ -64,25 +64,37 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="AqL-ev-6OE">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="488" id="J3M-3Q-ffP"/>
+                                    <constraint firstAttribute="width" constant="60" id="TuB-jU-LMl"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Mrv-Xh-gzF" firstAttribute="top" secondItem="U5b-ec-gup" secondAttribute="bottom" constant="14" id="GlD-Bt-Ido"/>
                             <constraint firstAttribute="leadingMargin" secondItem="Mrv-Xh-gzF" secondAttribute="leading" id="Lv7-sh-DyT"/>
                             <constraint firstItem="Zyj-iv-9Uk" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="R6W-ok-9IB"/>
+                            <constraint firstItem="AqL-ev-6OE" firstAttribute="top" secondItem="Mrv-Xh-gzF" secondAttribute="top" id="mdv-DL-fL7"/>
                             <constraint firstItem="Zyj-iv-9Uk" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="nYU-Px-oY7"/>
-                            <constraint firstItem="v17-Um-j06" firstAttribute="leading" secondItem="Mrv-Xh-gzF" secondAttribute="trailing" constant="6" id="oDI-f2-fT4"/>
+                            <constraint firstItem="v17-Um-j06" firstAttribute="leading" secondItem="Mrv-Xh-gzF" secondAttribute="trailing" constant="16" id="oDI-f2-fT4"/>
                             <constraint firstItem="xap-au-uGJ" firstAttribute="top" secondItem="Mrv-Xh-gzF" secondAttribute="top" id="ppV-79-RKI"/>
                             <constraint firstItem="U5b-ec-gup" firstAttribute="top" secondItem="Zyj-iv-9Uk" secondAttribute="bottom" constant="14" id="qoC-7U-x5f"/>
                             <constraint firstItem="v17-Um-j06" firstAttribute="top" secondItem="Mrv-Xh-gzF" secondAttribute="top" id="re9-kt-1pR"/>
                             <constraint firstItem="U5b-ec-gup" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="v4W-au-xpi"/>
-                            <constraint firstItem="xap-au-uGJ" firstAttribute="leading" secondItem="v17-Um-j06" secondAttribute="trailing" constant="6" id="z77-OD-fH4"/>
+                            <constraint firstItem="AqL-ev-6OE" firstAttribute="leading" secondItem="xap-au-uGJ" secondAttribute="trailing" constant="16" id="xnu-vm-XyN"/>
+                            <constraint firstItem="xap-au-uGJ" firstAttribute="leading" secondItem="v17-Um-j06" secondAttribute="trailing" constant="16" id="z77-OD-fH4"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="beaconText1" destination="Mrv-Xh-gzF" id="OvY-YP-Z7y"/>
                         <outlet property="beaconText2" destination="v17-Um-j06" id="njs-QD-LLt"/>
                         <outlet property="beaconText3" destination="xap-au-uGJ" id="aa7-Xk-7AQ"/>
+                        <outlet property="beaconText4" destination="AqL-ev-6OE" id="9gc-fB-OAk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
