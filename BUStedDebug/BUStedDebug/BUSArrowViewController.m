@@ -26,6 +26,8 @@
 #define BEACON_F905_MAJOR 38605
 #define BEACON_F905_MINOR 63779
 
+#define APPROXIMITY_THRESHOLD 1.5
+#define PATH_ARRAY [NSMutableArray arrayWithObjects:@"42563",@"21307",@"38605",nil]
 
 @interface BUSArrowViewController () <KTKBeaconManagerDelegate, CLLocationManagerDelegate>
 
@@ -38,7 +40,12 @@
 @end
 
 @implementation BUSArrowViewController {
-CLLocationManager *locationManager;
+    CLLocationManager *locationManager;
+    BUSBeacon *currentBeacon;
+    NSMutableArray<NSString *> *path;
+    double degree;
+    bool finished;
+    int counter;
 }
 
 - (void)viewDidLoad {
@@ -48,7 +55,13 @@ CLLocationManager *locationManager;
     
     [self.view setBackgroundColor:UIColorFromRGB(0x393939)];
     
+    // init
+    path = PATH_ARRAY;
+    finished = false;
+    counter = 1;
+    
     [self setupArrowView];
+    [self setupBeacons];
     
     locationManager = [[CLLocationManager alloc]init];
     locationManager.delegate = self;
@@ -63,7 +76,7 @@ CLLocationManager *locationManager;
     // If the accuracy is valid, process the event.
     if (newHeading.headingAccuracy > 0){
         CLLocationDirection theHeading = newHeading.magneticHeading;
-        [self.circleView rotateArrowBy:theHeading];
+        degree = theHeading;
     }
     
     return;
@@ -174,7 +187,33 @@ CLLocationManager *locationManager;
  *
  */
 - (void)calculateNewDirection {
+    if (finished) {
+        return;
+    }
     
+    if(!currentBeacon) {
+        currentBeacon = [self.beacons objectForKey:[path objectAtIndex:0]];
+        [path removeObjectAtIndex:0];
+    }
+    BUSBeacon *nextBeacon = [self.beacons objectForKey:[path objectAtIndex:0]];
+
+    
+    if ([path count] == 1 && [nextBeacon.accuracy doubleValue] < APPROXIMITY_THRESHOLD) {
+        finished = true;
+        return;
+    }
+    
+    if (nextBeacon && [path count] > 1 && [nextBeacon.accuracy doubleValue]  - [currentBeacon.accuracy doubleValue] < 0) {
+        currentBeacon = [self.beacons objectForKey:[path objectAtIndex:0]];
+        [path removeObjectAtIndex:0];
+    }
+    
+    NSNumber *angle = [currentBeacon.neighbours objectForKey:[path objectAtIndex:0]];
+    [self.circleView rotateArrowBy: [self translateAngleToOrientation:[angle floatValue]]];
+}
+
+- (double) translateAngleToOrientation: (double) value {
+    return (int)(value - degree) % 360;
 }
 
 
@@ -211,7 +250,11 @@ CLLocationManager *locationManager;
         
         if ([self.beacons objectForKey: [beacon.major stringValue]]) {
             busBeacon = [self.beacons objectForKey: [beacon.major stringValue]];
-            busBeacon.accuracy = [NSNumber numberWithDouble:beacon.accuracy];
+            
+            if (beacon.accuracy >= 0) {
+                busBeacon.accuracy = [NSNumber numberWithDouble:beacon.accuracy];
+            }
+
         } else {
             busBeacon = [[BUSBeacon alloc] init];
             busBeacon.id = [beacon.major stringValue];
@@ -222,9 +265,11 @@ CLLocationManager *locationManager;
                 case 42563:
                     busBeacon.neighbours = [[NSMutableDictionary alloc] init];
                     [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:242] forKey: @"21307"];
+                    break;
                 case 44025:
                     busBeacon.neighbours = [[NSMutableDictionary alloc] init];
                     [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:88] forKey: @"21307"];
+                    break;
                 case 38605:
                     busBeacon.neighbours = [[NSMutableDictionary alloc] init];
                     [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:352] forKey: @"21307"];
@@ -236,12 +281,17 @@ CLLocationManager *locationManager;
                     [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:167] forKey: @"38605"];
                     break;
             }
-            
-            [self.beacons setObject:busBeacon forKey: [beacon.major stringValue]];
         }
         
-        // Direction tab
+        [self.beacons setObject:busBeacon forKey: [beacon.major stringValue]];
+        
+        //only call every 4 ticks
         [self calculateNewDirection];
+
+        if (counter % 10 == 0) {
+            // Direction tab
+        }
+        counter++;
     }
     
 }

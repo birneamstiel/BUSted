@@ -24,6 +24,8 @@
 #define BEACON_F905_MAJOR 38605
 #define BEACON_F905_MINOR 63779
 
+
+
 @interface ViewController () <KTKBeaconManagerDelegate, CLLocationManagerDelegate>
 
 @property KTKBeaconManager *beaconManager;
@@ -36,6 +38,8 @@
 
 @implementation ViewController {
     CLLocationManager *locationManager;
+    BUSBeacon *currentBeacon;
+    NSMutableArray<NSString *> *Path;
 }
 
 - (void)viewDidLoad {
@@ -43,6 +47,7 @@
     self.beacons = [[NSMutableDictionary alloc] init];
     // Do any additional setup after loading the view, typically from a nib.
     //self.statusText.delegate = self;
+        
     locationManager = [[CLLocationManager alloc]init];
     locationManager.delegate = self;
 
