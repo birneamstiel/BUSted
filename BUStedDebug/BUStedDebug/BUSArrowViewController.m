@@ -31,8 +31,12 @@
 #define APPROXIMITY_THRESHOLD 2.5
 #define REDIRECT_FACTOR 1.3
 
-#define PATH_ARRAY [NSMutableArray arrayWithObjects:@"42563",@"21307",@"38605",nil]
-#define PATH_ARRAY2 [NSMutableArray arrayWithObjects:@"42563",@"21307",@"44025",nil]
+// sample path "Spielfeld" with left turn
+#define PATH_ARRAY [NSMutableArray arrayWithObjects:@"38605",@"21307",@"44025",nil]
+// sample path "Spielfeld", go straight
+#define PATH_ARRAY2 [NSMutableArray arrayWithObjects:@"38605",@"21307",@"42563",nil]
+// sample path "Schlesisches Tor"
+#define PATH_ARRAY3 [NSMutableArray arrayWithObjects:@"38605",@"42563",@"44025", @"21307",nil]
 
 #define START @"Let's go"
 #define TURN_RIGHT @"Turn right"
@@ -69,7 +73,7 @@
     [self.view setBackgroundColor:UIColorFromRGB(0x393939)];
     
     // init
-    path = PATH_ARRAY2;
+    path = PATH_ARRAY;
     finished = false;
     destinationID = [path objectAtIndex:path.count - 1];
     
@@ -356,27 +360,48 @@
             busBeacon.id = [beacon.major stringValue];
             busBeacon.accuracy = [NSNumber numberWithDouble:beacon.accuracy];
             
-            // Add neighbours
+// Sample data for "Spielfeld":
             switch ([beacon.major intValue]) {
                 case 42563:
                     busBeacon.neighbours = [[NSMutableDictionary alloc] init];
-                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:242] forKey: @"21307"];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:88] forKey: @"21307"];
                     break;
                 case 44025:
                     busBeacon.neighbours = [[NSMutableDictionary alloc] init];
-                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:88] forKey: @"21307"];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:352] forKey: @"21307"];
                     break;
                 case 38605:
                     busBeacon.neighbours = [[NSMutableDictionary alloc] init];
-                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:352] forKey: @"21307"];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:242] forKey: @"21307"];
                     break;
                 case 21307:
                     busBeacon.neighbours = [[NSMutableDictionary alloc] init];
-                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:67] forKey: @"42563"];
-                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:269] forKey: @"44025"];
-                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:167] forKey: @"38605"];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:269] forKey: @"42563"];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:167] forKey: @"44025"];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:67] forKey: @"38605"];
                     break;
             }
+            
+// Sample data for "Schlesisches Tor":
+//                        switch ([beacon.major intValue]) {
+//                            case 42563://8csn
+//                                busBeacon.neighbours = [[NSMutableDictionary alloc] init];
+//                                [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:26] forKey: @"44025"];
+//                                break;
+//                            case 44025://xpqe
+//                                busBeacon.neighbours = [[NSMutableDictionary alloc] init];
+//                                [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:92] forKey: @"21307"];
+//                                break;
+//                            case 38605://f905
+//                                busBeacon.neighbours = [[NSMutableDictionary alloc] init];
+//                                [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:279] forKey: @"42563"];
+//                                break;
+//                            case 21307://0jnw
+//                                busBeacon.neighbours = [[NSMutableDictionary alloc] init];
+////                                [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:67] forKey: @"42563"];
+//                                break;
+//                        }
+
             [self.beacons setObject:busBeacon forKey: [beacon.major stringValue]];
 
         }
