@@ -34,10 +34,11 @@
 #define PATH_ARRAY [NSMutableArray arrayWithObjects:@"42563",@"21307",@"38605",nil]
 #define PATH_ARRAY2 [NSMutableArray arrayWithObjects:@"42563",@"21307",@"44025",nil]
 
+#define START @"Let's go"
 #define TURN_RIGHT @"Turn right"
 #define TURN_LEFT @"Turn left"
-#define REACHED_DESTINATION @"Jump in the bus sweetheart"
-#define GO_STRAIGHT @"Jump in the bus sweetheart"
+#define REACHED_DESTINATION @"Jump in the bus baby"
+#define GO_STRAIGHT @"Go ahead"
 
 @interface BUSArrowViewController () <KTKBeaconManagerDelegate, CLLocationManagerDelegate>
 
@@ -62,8 +63,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self speak: REACHED_DESTINATION];
     
     self.beacons = [[NSMutableDictionary alloc] init];
     
@@ -244,6 +243,9 @@
             [path removeObjectAtIndex:0];
             beaconCounter--;
             [self.circleView startedNavigation];
+            
+            [self speak: START];
+            
             return navigationHasStarted =  true;
         }
     }
