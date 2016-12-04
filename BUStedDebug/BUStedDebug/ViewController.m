@@ -54,6 +54,13 @@
     if([CLLocationManager headingAvailable]) {
         [locationManager startUpdatingHeading];
     }
+    
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc]
+                                   initWithTitle:@"Back"
+                                   style:UIBarButtonItemStyleBordered
+                                   target:self
+                                   action:@selector(backBtnClicked:)];
+    self.navigationItem.leftBarButtonItem = backButton;
 }
 
 - (void)locationManager:(CLLocationManager*)manager didUpdateHeading:(CLHeading*)newHeading

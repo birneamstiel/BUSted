@@ -113,7 +113,7 @@
             </objects>
             <point key="canvasLocation" x="1752.8" y="-454.72263868065971"/>
         </scene>
-        <!--Item 2-->
+        <!--Debug-->
         <scene sceneID="odS-rl-5m1">
             <objects>
                 <viewController id="lgY-oP-qga" sceneMemberID="viewController">
@@ -125,24 +125,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xNl-us-Qm1">
-                                <frame key="frameInset" minX="137" minY="68" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Debug"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xNl-us-Qm1">
+                                <state key="normal" title="Yes, I know what I'm doing"/>
                                 <connections>
                                     <segue destination="BYZ-38-t0r" kind="show" id="GUn-Wb-VF6"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="xNl-us-Qm1" firstAttribute="centerY" secondItem="iN2-Mj-bt6" secondAttribute="centerY" id="blY-vz-8C6"/>
+                            <constraint firstItem="xNl-us-Qm1" firstAttribute="centerX" secondItem="iN2-Mj-bt6" secondAttribute="centerX" id="dll-Ra-oB4"/>
+                        </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item 2" id="x6x-1W-Q93"/>
+                    <tabBarItem key="tabBarItem" title="Debug" image="console.png" selectedImage="console_active.png" id="x6x-1W-Q93"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OtY-XI-kMK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="820" y="-454"/>
         </scene>
-        <!--Item 1-->
+        <!--Navigation-->
         <scene sceneID="O4g-Hv-3VY">
             <objects>
                 <viewController id="HK3-EZ-af1" customClass="BUSArrowViewController" sceneMemberID="viewController">
@@ -154,7 +156,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nG7-6O-rGj">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nG7-6O-rGj">
                                 <constraints>
                                     <constraint firstAttribute="width" constant="70" id="QkS-gE-MRA"/>
                                 </constraints>
@@ -162,7 +164,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8m-5O-WDr">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8m-5O-WDr">
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="220" id="eXW-mp-Cuv"/>
                                     <constraint firstAttribute="height" constant="21" id="n8n-sr-Hpp"/>
@@ -180,7 +182,7 @@
                             <constraint firstItem="nG7-6O-rGj" firstAttribute="top" secondItem="wd9-MI-QN8" secondAttribute="top" constant="15" id="ymj-ko-bA8"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item 1" id="Oiz-r2-kLW"/>
+                    <tabBarItem key="tabBarItem" title="Navigation" image="directions.png" selectedImage="directions_active.png" id="Oiz-r2-kLW"/>
                     <connections>
                         <outlet property="debugLabelLeft" destination="nG7-6O-rGj" id="gVq-Tv-Lj2"/>
                         <outlet property="debugLabelRight" destination="M8m-5O-WDr" id="o82-xL-2nr"/>
@@ -291,6 +293,10 @@
         </scene>
     </scenes>
     <resources>
+        <image name="console.png" width="25" height="25"/>
+        <image name="console_active.png" width="25" height="25"/>
+        <image name="directions.png" width="25" height="25"/>
+        <image name="directions_active.png" width="25" height="25"/>
         <image name="iBeacon.png" width="201" height="251"/>
     </resources>
 </document>
