@@ -132,6 +132,10 @@
 
 }
 
+- (void) stopBeacons {
+    [self.beaconManager stopMonitoringForAllRegions];
+}
+
 
 - (void) setupArrowView {
     self.circleView = [[BUSArrowIndicatorView alloc] initWithFrame:CGRectMake(20,20,300,300)];
@@ -200,6 +204,8 @@
     
     if ([path count] == 1 && [nextBeacon.accuracy doubleValue] < APPROXIMITY_THRESHOLD) {
         finished = true;
+        [self reachedDestination];
+        
         return;
     }
     
@@ -214,6 +220,11 @@
 
 - (double) translateAngleToOrientation: (double) value {
     return (int)(value - degree) % 360;
+}
+
+
+- (void) reachedDestination {
+    [self.circleView reachedDestination];
 }
 
 
@@ -288,10 +299,6 @@
         //only call every 4 ticks
         [self calculateNewDirection];
 
-        if (counter % 10 == 0) {
-            // Direction tab
-        }
-        counter++;
     }
     
 }
