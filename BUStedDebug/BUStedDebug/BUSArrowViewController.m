@@ -13,6 +13,7 @@
 #import <KontaktSDK/KontaktSDK.h>
 #import "BUSBeacon.h"
 #import <float.h>
+#import <AVFoundation/AVFoundation.h>
 
 
 #define BEACON_18CSN_MAJOR 42563
@@ -27,11 +28,16 @@
 #define BEACON_F905_MAJOR 38605
 #define BEACON_F905_MINOR 63779
 
-#define APPROXIMITY_THRESHOLD 2
+#define APPROXIMITY_THRESHOLD 2.5
 #define REDIRECT_FACTOR 1.3
 
 #define PATH_ARRAY [NSMutableArray arrayWithObjects:@"42563",@"21307",@"38605",nil]
 #define PATH_ARRAY2 [NSMutableArray arrayWithObjects:@"42563",@"21307",@"44025",nil]
+
+#define TURN_RIGHT @"Turn right"
+#define TURN_LEFT @"Turn left"
+#define REACHED_DESTINATION @"Jump in the bus sweetheart"
+#define GO_STRAIGHT @"Jump in the bus sweetheart"
 
 @interface BUSArrowViewController () <KTKBeaconManagerDelegate, CLLocationManagerDelegate>
 
@@ -56,6 +62,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self speak: REACHED_DESTINATION];
     
     self.beacons = [[NSMutableDictionary alloc] init];
     
@@ -204,13 +212,22 @@
     
     BUSBeacon *nextBeacon = [self.beacons objectForKey:[path objectAtIndex:0]];
     
-    NSNumber *angle = [currentBeacon.neighbours objectForKey:[path objectAtIndex:0]];
-    [self.circleView rotateArrowBy: [self translateAngleToOrientation:[angle floatValue]]];
+    double oldAngle = degree;
+    
+    NSNumber *newAngle = [currentBeacon.neighbours objectForKey:[path objectAtIndex:0]];
+    [self.circleView rotateArrowBy: [self translateAngleToOrientation:[newAngle floatValue]]];
     
     if (nextBeacon && [nextBeacon.accuracy doubleValue]  - REDIRECT_FACTOR * [currentBeacon.accuracy doubleValue] < 0) {
         currentBeacon = [self.beacons objectForKey:[path objectAtIndex:0]];
         [path removeObjectAtIndex:0];
         beaconCounter--;
+        
+        // Speak baby
+        if ([path count] > 0) {
+            newAngle = [currentBeacon.neighbours objectForKey:[path objectAtIndex:0]];
+            NSString *text = [self getTextForSpeak:oldAngle - [newAngle doubleValue]];
+            [self speak:text];
+        }
     }
     
     [self printDebugInfo];
@@ -270,10 +287,27 @@
 
 - (void) reachedDestination {
     [self.circleView reachedDestination];
+    [self speak: REACHED_DESTINATION];
     [self stopBeacons];
 }
 
 
+- (void) speak:(NSString*)text {
+    AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:text];
+    utterance.pitchMultiplier = 1.0;
+    AVSpeechSynthesizer *synth = [[AVSpeechSynthesizer alloc] init];
+    [synth speakUtterance:utterance];
+}
+
+- (NSString*) getTextForSpeak:(double)angleDifference {
+    if (angleDifference < 0) {
+        return TURN_RIGHT;
+    } else {
+        return TURN_LEFT;
+    }
+    
+    return GO_STRAIGHT;
+}
 
 
 - (void)beaconManager:(KTKBeaconManager *)manager didStartMonitoringForRegion:(__kindof KTKBeaconRegion *)region {
