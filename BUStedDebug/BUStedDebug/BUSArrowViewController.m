@@ -26,8 +26,9 @@
 #define BEACON_F905_MAJOR 38605
 #define BEACON_F905_MINOR 63779
 
-#define APPROXIMITY_THRESHOLD 1.5
+#define APPROXIMITY_THRESHOLD 2
 #define PATH_ARRAY [NSMutableArray arrayWithObjects:@"42563",@"21307",@"38605",nil]
+#define PATH_ARRAY2 [NSMutableArray arrayWithObjects:@"42563",@"21307",@"44025",nil]
 
 @interface BUSArrowViewController () <KTKBeaconManagerDelegate, CLLocationManagerDelegate>
 
@@ -56,7 +57,7 @@
     [self.view setBackgroundColor:UIColorFromRGB(0x393939)];
     
     // init
-    path = PATH_ARRAY;
+    path = PATH_ARRAY2;
     finished = false;
     counter = 1;
     
@@ -106,10 +107,10 @@
     }
     
     NSUUID *myProximityUUID = [[NSUUID alloc] initWithUUIDString:@"f7826da6-4fa2-4e98-8024-bc5b71e0893e"];
-    KTKBeaconRegion *region8CSN = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_18CSN_MAJOR minor:BEACON_18CSN_MINOR identifier:@"BUSted beacon reagion1"];
-    KTKBeaconRegion *regionXpQe = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_XPQE_MAJOR minor:BEACON_XPQE_MINOR identifier:@"BUSted beacon reagion2"];
-    KTKBeaconRegion *region0jnw = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_0JNW_MAJOR minor:BEACON_0JNW_MINOR identifier:@"BUSted beacon reagion3"];
-    KTKBeaconRegion *regionf905 = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_F905_MAJOR minor:BEACON_F905_MINOR identifier:@"BUSted beacon reagion4"];
+    KTKBeaconRegion *region8CSN = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID identifier:@"BUSted beacon reagion1"];
+//    KTKBeaconRegion *regionXpQe = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_XPQE_MAJOR minor:BEACON_XPQE_MINOR identifier:@"BUSted beacon reagion2"];
+//    KTKBeaconRegion *region0jnw = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_0JNW_MAJOR minor:BEACON_0JNW_MINOR identifier:@"BUSted beacon reagion3"];
+//    KTKBeaconRegion *regionf905 = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_F905_MAJOR minor:BEACON_F905_MINOR identifier:@"BUSted beacon reagion4"];
     
     switch ([KTKBeaconManager locationAuthorizationStatus]) {
             // Non-relevant cases are cut
@@ -118,14 +119,14 @@
                 [self.beaconManager startMonitoringForRegion:region8CSN];
                 [self.beaconManager startRangingBeaconsInRegion:region8CSN];
                 
-                [self.beaconManager startMonitoringForRegion:regionXpQe];
-                [self.beaconManager startRangingBeaconsInRegion:regionXpQe];
-                
-                [self.beaconManager startMonitoringForRegion:region0jnw];
-                [self.beaconManager startRangingBeaconsInRegion:region0jnw];
-                
-                [self.beaconManager startMonitoringForRegion:regionf905];
-                [self.beaconManager startRangingBeaconsInRegion:regionf905];
+//                [self.beaconManager startMonitoringForRegion:regionXpQe];
+//                [self.beaconManager startRangingBeaconsInRegion:regionXpQe];
+//                
+//                [self.beaconManager startMonitoringForRegion:region0jnw];
+//                [self.beaconManager startRangingBeaconsInRegion:region0jnw];
+//                
+//                [self.beaconManager startMonitoringForRegion:regionf905];
+//                [self.beaconManager startRangingBeaconsInRegion:regionf905];
             }
             break;
     }
@@ -288,7 +289,7 @@
                 case 21307:
                     busBeacon.neighbours = [[NSMutableDictionary alloc] init];
                     [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:67] forKey: @"42563"];
-                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:88] forKey: @"44025"];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:269] forKey: @"44025"];
                     [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:167] forKey: @"38605"];
                     break;
             }
@@ -297,9 +298,10 @@
         [self.beacons setObject:busBeacon forKey: [beacon.major stringValue]];
         
         //only call every 4 ticks
-        [self calculateNewDirection];
+        
 
     }
+    [self calculateNewDirection];
     
 }
 
