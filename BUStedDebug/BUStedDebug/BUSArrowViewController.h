@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface BUSArrowViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UILabel *debugLabelLeft;
+@property (weak, nonatomic) IBOutlet UILabel *debugLabelRight;
 
 @end

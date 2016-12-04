@@ -12,6 +12,7 @@
 #include <math.h>
 #import <KontaktSDK/KontaktSDK.h>
 #import "BUSBeacon.h"
+#import <float.h>
 
 
 #define BEACON_18CSN_MAJOR 42563
@@ -27,6 +28,8 @@
 #define BEACON_F905_MINOR 63779
 
 #define APPROXIMITY_THRESHOLD 2
+#define REDIRECT_FACTOR 1.3
+
 #define PATH_ARRAY [NSMutableArray arrayWithObjects:@"42563",@"21307",@"38605",nil]
 #define PATH_ARRAY2 [NSMutableArray arrayWithObjects:@"42563",@"21307",@"44025",nil]
 
@@ -46,7 +49,9 @@
     NSMutableArray<NSString *> *path;
     double degree;
     bool finished;
-    int counter;
+    bool navigationHasStarted;
+    NSString * destinationID;
+    int beaconCounter;
 }
 
 - (void)viewDidLoad {
@@ -59,10 +64,11 @@
     // init
     path = PATH_ARRAY2;
     finished = false;
-    counter = 1;
+    destinationID = [path objectAtIndex:path.count - 1];
     
     [self setupArrowView];
     [self setupBeacons];
+    beaconCounter = (int) path.count;
     
     locationManager = [[CLLocationManager alloc]init];
     locationManager.delegate = self;
@@ -192,31 +198,69 @@
  *
  */
 - (void)calculateNewDirection {
-    if (finished) {
+    if ([self userReachedDestination] || ![self navigationStarted] || [path count] == 0) {
         return;
     }
     
-    if(!currentBeacon) {
-        currentBeacon = [self.beacons objectForKey:[path objectAtIndex:0]];
-        [path removeObjectAtIndex:0];
-    }
     BUSBeacon *nextBeacon = [self.beacons objectForKey:[path objectAtIndex:0]];
-
-    
-    if ([path count] == 1 && [nextBeacon.accuracy doubleValue] < APPROXIMITY_THRESHOLD) {
-        finished = true;
-        [self reachedDestination];
-        
-        return;
-    }
-    
-    if (nextBeacon && [path count] > 1 && [nextBeacon.accuracy doubleValue]  - [currentBeacon.accuracy doubleValue] < 0) {
-        currentBeacon = [self.beacons objectForKey:[path objectAtIndex:0]];
-        [path removeObjectAtIndex:0];
-    }
     
     NSNumber *angle = [currentBeacon.neighbours objectForKey:[path objectAtIndex:0]];
     [self.circleView rotateArrowBy: [self translateAngleToOrientation:[angle floatValue]]];
+    
+    if (nextBeacon && [nextBeacon.accuracy doubleValue]  - REDIRECT_FACTOR * [currentBeacon.accuracy doubleValue] < 0) {
+        currentBeacon = [self.beacons objectForKey:[path objectAtIndex:0]];
+        [path removeObjectAtIndex:0];
+        beaconCounter--;
+    }
+    
+    [self printDebugInfo];
+}
+
+- (bool) navigationStarted {
+    if (navigationHasStarted) {
+        return true;
+    }
+    
+    for (BUSBeacon *beacon in [self.beacons allValues]) {
+        if ([beacon.id isEqualToString:[path objectAtIndex:0]]) {
+            currentBeacon = [self.beacons objectForKey:[path objectAtIndex:0]];
+            [path removeObjectAtIndex:0];
+            beaconCounter--;
+            [self.circleView startedNavigation];
+            return navigationHasStarted =  true;
+        }
+    }
+    
+    // start beacon not in sight
+    return false;
+    
+}
+
+- (bool) userReachedDestination {
+    if (beaconCounter > 1) {
+        return false;
+    }
+    
+    BUSBeacon * strongestBeacon = [self strongestBeaconInReach];
+    self.debugLabelLeft.text = strongestBeacon.id;
+    if ([strongestBeacon.id isEqualToString:destinationID] && [strongestBeacon.accuracy doubleValue] < APPROXIMITY_THRESHOLD) {
+        [self reachedDestination];
+        return true;
+    }
+    
+    return false;
+}
+
+- (BUSBeacon*) strongestBeaconInReach {
+    double strongest = DBL_MAX;
+    BUSBeacon * strongestBeacon;
+    for (BUSBeacon *beacon in [self.beacons allValues]) {
+        if ([beacon.accuracy doubleValue] < strongest) {
+            strongest = [beacon.accuracy doubleValue];
+            strongestBeacon = beacon;
+        }
+    }
+    return strongestBeacon;
 }
 
 - (double) translateAngleToOrientation: (double) value {
@@ -226,6 +270,7 @@
 
 - (void) reachedDestination {
     [self.circleView reachedDestination];
+    [self stopBeacons];
 }
 
 
@@ -293,18 +338,23 @@
                     [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:167] forKey: @"38605"];
                     break;
             }
-        }
-        
-        [self.beacons setObject:busBeacon forKey: [beacon.major stringValue]];
-        
-        //only call every 4 ticks
-        
+            [self.beacons setObject:busBeacon forKey: [beacon.major stringValue]];
 
+        }
     }
     [self calculateNewDirection];
     
 }
 
+- (void) printDebugInfo {
+    //self.debugLabelLeft.text = currentBeacon.id;
+    NSString * values = @"";
+    for (NSString *beaconID in path) {
+        BUSBeacon * beacon = [self.beacons objectForKey:beaconID];
+        values = [values stringByAppendingString:[NSString stringWithFormat:@"%@|", beacon.id]];
+    }
+    self.debugLabelRight.text = values;
+}
 
 /*
 #pragma mark - Navigation

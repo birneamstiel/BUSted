@@ -25,7 +25,7 @@
         
         [self setBackgroundColor:[UIColor clearColor]];
         arrow = [UIImage imageNamed:@"arrow_smaller_black.png"];
-        circleColor = UIColorFromRGB(0xfde602);
+        circleColor = UIColorFromRGB(0xff0000);
     }
     return self;
 }
@@ -46,6 +46,11 @@
 
 - (void) reachedDestination {
     circleColor = UIColorFromRGB(0x00CA70);
+    [self setNeedsDisplay];
+}
+
+- (void) startedNavigation {
+    circleColor = UIColorFromRGB(0xfde602);
     [self setNeedsDisplay];
 }
 

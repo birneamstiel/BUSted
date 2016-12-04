@@ -21,4 +21,6 @@ alpha:1.0]
 
 - (void) reachedDestination;
 
+- (void) startedNavigation;
+
 @end

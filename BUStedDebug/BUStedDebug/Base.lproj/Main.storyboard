@@ -153,13 +153,42 @@
                     <view key="view" contentMode="scaleToFill" id="wd9-MI-QN8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nG7-6O-rGj">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="70" id="QkS-gE-MRA"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8m-5O-WDr">
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="220" id="eXW-mp-Cuv"/>
+                                    <constraint firstAttribute="height" constant="21" id="n8n-sr-Hpp"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="nG7-6O-rGj" firstAttribute="leading" secondItem="wd9-MI-QN8" secondAttribute="leading" constant="15" id="muH-xj-3B5"/>
+                            <constraint firstItem="M8m-5O-WDr" firstAttribute="top" secondItem="t5a-3G-tDE" secondAttribute="bottom" id="o7X-0F-I67"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="M8m-5O-WDr" secondAttribute="trailing" id="uWr-yY-OBZ"/>
+                            <constraint firstItem="nG7-6O-rGj" firstAttribute="top" secondItem="wd9-MI-QN8" secondAttribute="top" constant="15" id="ymj-ko-bA8"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item 1" id="Oiz-r2-kLW"/>
+                    <connections>
+                        <outlet property="debugLabelLeft" destination="nG7-6O-rGj" id="gVq-Tv-Lj2"/>
+                        <outlet property="debugLabelRight" destination="M8m-5O-WDr" id="o82-xL-2nr"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HlC-Sp-bKR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="818" y="-1120"/>
+            <point key="canvasLocation" x="816.79999999999995" y="-1120.3898050974515"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="SM2-B2-MF5">
