@@ -78,6 +78,10 @@
     [self setupBeacons];
     beaconCounter = (int) path.count;
     
+    UIImage *pattern = [UIImage imageNamed:@"background_pattern@2x.png"];
+    UIColor * bg = [UIColor colorWithPatternImage:pattern];
+    self.view.backgroundColor = bg;
+    
     locationManager = [[CLLocationManager alloc]init];
     locationManager.delegate = self;
     
@@ -230,7 +234,7 @@
         }
     }
     
-    [self printDebugInfo];
+    //[self printDebugInfo];
 }
 
 - (bool) navigationStarted {
@@ -259,7 +263,6 @@
     }
     
     BUSBeacon * strongestBeacon = [self strongestBeaconInReach];
-    self.debugLabelLeft.text = strongestBeacon.id;
     if ([strongestBeacon.id isEqualToString:destinationID] && [strongestBeacon.accuracy doubleValue] < APPROXIMITY_THRESHOLD) {
         [self reachedDestination];
         return true;
@@ -381,13 +384,16 @@
 }
 
 - (void) printDebugInfo {
-    //self.debugLabelLeft.text = currentBeacon.id;
+    self.debugLabelLeft.text = currentBeacon.id;
     NSString * values = @"";
     for (NSString *beaconID in path) {
         BUSBeacon * beacon = [self.beacons objectForKey:beaconID];
         values = [values stringByAppendingString:[NSString stringWithFormat:@"%@|", beacon.id]];
     }
     self.debugLabelRight.text = values;
+    self.debugLabelLeft.hidden = NO;
+    self.debugLabelRight.hidden = NO;
+    
 }
 
 /*

@@ -25,7 +25,7 @@
         
         [self setBackgroundColor:[UIColor clearColor]];
         arrow = [UIImage imageNamed:@"arrow_smaller_black.png"];
-        circleColor = UIColorFromRGB(0xff0000);
+        circleColor = UIColorFromRGB(0xd41600);
     }
     return self;
 }
