@@ -9,24 +9,66 @@
 #import "BUSArrowViewController.h"
 #import "BUSArrowIndicatorView.h"
 #include <CoreLocation/CoreLocation.h>
+#include <math.h>
+#import <KontaktSDK/KontaktSDK.h>
+#import "BUSBeacon.h"
+#import <float.h>
 
 
+#define BEACON_18CSN_MAJOR 42563
+#define BEACON_18CSN_MINOR 20278
 
-@interface BUSArrowViewController () <CLLocationManagerDelegate>
+#define BEACON_XPQE_MAJOR 44025
+#define BEACON_XPQE_MINOR 64030
+
+#define BEACON_0JNW_MAJOR 21307
+#define BEACON_0JNW_MINOR 26964
+
+#define BEACON_F905_MAJOR 38605
+#define BEACON_F905_MINOR 63779
+
+#define APPROXIMITY_THRESHOLD 2
+#define REDIRECT_FACTOR 1.3
+
+#define PATH_ARRAY [NSMutableArray arrayWithObjects:@"42563",@"21307",@"38605",nil]
+#define PATH_ARRAY2 [NSMutableArray arrayWithObjects:@"42563",@"21307",@"44025",nil]
+
+@interface BUSArrowViewController () <KTKBeaconManagerDelegate, CLLocationManagerDelegate>
+
 @property BUSArrowIndicatorView * circleView;
+@property KTKBeaconManager *beaconManager;
+
+// ID of BUSBeacon as NSString --> BUSBeacon
+@property NSMutableDictionary *beacons;
+
 @end
 
-@implementation BUSArrowViewController
-
-CLLocationManager *locationManager;
-int frames = 0;
-int frameLimit = 60;
+@implementation BUSArrowViewController {
+    CLLocationManager *locationManager;
+    BUSBeacon *currentBeacon;
+    NSMutableArray<NSString *> *path;
+    double degree;
+    bool finished;
+    bool navigationHasStarted;
+    NSString * destinationID;
+    int beaconCounter;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.beacons = [[NSMutableDictionary alloc] init];
+    
     [self.view setBackgroundColor:UIColorFromRGB(0x393939)];
     
+    // init
+    path = PATH_ARRAY2;
+    finished = false;
+    destinationID = [path objectAtIndex:path.count - 1];
+    
     [self setupArrowView];
+    [self setupBeacons];
+    beaconCounter = (int) path.count;
     
     locationManager = [[CLLocationManager alloc]init];
     locationManager.delegate = self;
@@ -41,12 +83,64 @@ int frameLimit = 60;
     // If the accuracy is valid, process the event.
     if (newHeading.headingAccuracy > 0){
         CLLocationDirection theHeading = newHeading.magneticHeading;
-        [self.circleView rotateArrowBy:theHeading];
-        frames = 0;
+        degree = theHeading;
     }
     
-    frames++;
     return;
+}
+
+- (void) setupBeacons {
+    self.beaconManager = [[KTKBeaconManager alloc] initWithDelegate:self];
+    
+    switch ([KTKBeaconManager locationAuthorizationStatus]) {
+        case kCLAuthorizationStatusNotDetermined:
+            [self.beaconManager requestLocationAlwaysAuthorization];
+            break;
+            
+        case kCLAuthorizationStatusDenied:
+        case kCLAuthorizationStatusRestricted:
+            // No access to Location Services
+            break;
+            
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+            // For most iBeacon-based app this type of
+            // permission is not adequate
+            break;
+            
+        case kCLAuthorizationStatusAuthorizedAlways:
+            // We will use this later
+            break;
+    }
+    
+    NSUUID *myProximityUUID = [[NSUUID alloc] initWithUUIDString:@"f7826da6-4fa2-4e98-8024-bc5b71e0893e"];
+    KTKBeaconRegion *region8CSN = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID identifier:@"BUSted beacon reagion1"];
+//    KTKBeaconRegion *regionXpQe = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_XPQE_MAJOR minor:BEACON_XPQE_MINOR identifier:@"BUSted beacon reagion2"];
+//    KTKBeaconRegion *region0jnw = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_0JNW_MAJOR minor:BEACON_0JNW_MINOR identifier:@"BUSted beacon reagion3"];
+//    KTKBeaconRegion *regionf905 = [[KTKBeaconRegion alloc] initWithProximityUUID:myProximityUUID major:BEACON_F905_MAJOR minor:BEACON_F905_MINOR identifier:@"BUSted beacon reagion4"];
+    
+    switch ([KTKBeaconManager locationAuthorizationStatus]) {
+            // Non-relevant cases are cut
+        case kCLAuthorizationStatusAuthorizedAlways:
+            if ([KTKBeaconManager isMonitoringAvailable]) {
+                [self.beaconManager startMonitoringForRegion:region8CSN];
+                [self.beaconManager startRangingBeaconsInRegion:region8CSN];
+                
+//                [self.beaconManager startMonitoringForRegion:regionXpQe];
+//                [self.beaconManager startRangingBeaconsInRegion:regionXpQe];
+//                
+//                [self.beaconManager startMonitoringForRegion:region0jnw];
+//                [self.beaconManager startRangingBeaconsInRegion:region0jnw];
+//                
+//                [self.beaconManager startMonitoringForRegion:regionf905];
+//                [self.beaconManager startRangingBeaconsInRegion:regionf905];
+            }
+            break;
+    }
+
+}
+
+- (void) stopBeacons {
+    [self.beaconManager stopMonitoringForAllRegions];
 }
 
 
@@ -99,11 +193,167 @@ int frameLimit = 60;
     
 }
 
+/**
+ * Main logic, gets called when beacon data is ready.
+ *
+ */
+- (void)calculateNewDirection {
+    if ([self userReachedDestination] || ![self navigationStarted] || [path count] == 0) {
+        return;
+    }
+    
+    BUSBeacon *nextBeacon = [self.beacons objectForKey:[path objectAtIndex:0]];
+    
+    NSNumber *angle = [currentBeacon.neighbours objectForKey:[path objectAtIndex:0]];
+    [self.circleView rotateArrowBy: [self translateAngleToOrientation:[angle floatValue]]];
+    
+    if (nextBeacon && [nextBeacon.accuracy doubleValue]  - REDIRECT_FACTOR * [currentBeacon.accuracy doubleValue] < 0) {
+        currentBeacon = [self.beacons objectForKey:[path objectAtIndex:0]];
+        [path removeObjectAtIndex:0];
+        beaconCounter--;
+    }
+    
+    [self printDebugInfo];
+}
+
+- (bool) navigationStarted {
+    if (navigationHasStarted) {
+        return true;
+    }
+    
+    for (BUSBeacon *beacon in [self.beacons allValues]) {
+        if ([beacon.id isEqualToString:[path objectAtIndex:0]]) {
+            currentBeacon = [self.beacons objectForKey:[path objectAtIndex:0]];
+            [path removeObjectAtIndex:0];
+            beaconCounter--;
+            [self.circleView startedNavigation];
+            return navigationHasStarted =  true;
+        }
+    }
+    
+    // start beacon not in sight
+    return false;
+    
+}
+
+- (bool) userReachedDestination {
+    if (beaconCounter > 1) {
+        return false;
+    }
+    
+    BUSBeacon * strongestBeacon = [self strongestBeaconInReach];
+    self.debugLabelLeft.text = strongestBeacon.id;
+    if ([strongestBeacon.id isEqualToString:destinationID] && [strongestBeacon.accuracy doubleValue] < APPROXIMITY_THRESHOLD) {
+        [self reachedDestination];
+        return true;
+    }
+    
+    return false;
+}
+
+- (BUSBeacon*) strongestBeaconInReach {
+    double strongest = DBL_MAX;
+    BUSBeacon * strongestBeacon;
+    for (BUSBeacon *beacon in [self.beacons allValues]) {
+        if ([beacon.accuracy doubleValue] < strongest) {
+            strongest = [beacon.accuracy doubleValue];
+            strongestBeacon = beacon;
+        }
+    }
+    return strongestBeacon;
+}
+
+- (double) translateAngleToOrientation: (double) value {
+    return (int)(value - degree) % 360;
+}
 
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void) reachedDestination {
+    [self.circleView reachedDestination];
+    [self stopBeacons];
+}
+
+
+
+
+- (void)beaconManager:(KTKBeaconManager *)manager didStartMonitoringForRegion:(__kindof KTKBeaconRegion *)region {
+    
+}
+
+- (void)beaconManager:(KTKBeaconManager *)manager monitoringDidFailForRegion:(__kindof KTKBeaconRegion *)region withError:(NSError *)error {
+    // Handle monitoring failing to start for your region
+}
+
+- (void)beaconManager:(KTKBeaconManager *)manager didEnterRegion:(__kindof KTKBeaconRegion *)region {
+    // Decide what to do when a user enters a range of your region; usually used
+    // for triggering a local notification and/or starting a beacon ranging
+    //self.statusText.text = @"enter";
+}
+
+- (void)beaconManager:(KTKBeaconManager *)manager didExitRegion:(__kindof KTKBeaconRegion *)region {
+    // Decide what to do when a user exits a range of your region; usually used
+    // for triggering a local notification and stoping a beacon ranging
+    //self.statusText.text = @"exit";
+}
+
+- (void)beaconManager:(KTKBeaconManager*)manager didDetermineState:(CLRegionState)state forRegion:(__kindof KTKBeaconRegion*)region {
+    
+}
+
+- (void)beaconManager:(KTKBeaconManager*)manager didRangeBeacons:(NSArray <CLBeacon *>*)beacons inRegion:(__kindof KTKBeaconRegion*)region {
+    
+    for(CLBeacon * beacon in beacons) {
+        BUSBeacon * busBeacon;
+        
+        if ([self.beacons objectForKey: [beacon.major stringValue]]) {
+            busBeacon = [self.beacons objectForKey: [beacon.major stringValue]];
+            
+            if (beacon.accuracy >= 0) {
+                busBeacon.accuracy = [NSNumber numberWithDouble:beacon.accuracy];
+            }
+
+        } else {
+            busBeacon = [[BUSBeacon alloc] init];
+            busBeacon.id = [beacon.major stringValue];
+            busBeacon.accuracy = [NSNumber numberWithDouble:beacon.accuracy];
+            
+            // Add neighbours
+            switch ([beacon.major intValue]) {
+                case 42563:
+                    busBeacon.neighbours = [[NSMutableDictionary alloc] init];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:242] forKey: @"21307"];
+                    break;
+                case 44025:
+                    busBeacon.neighbours = [[NSMutableDictionary alloc] init];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:88] forKey: @"21307"];
+                    break;
+                case 38605:
+                    busBeacon.neighbours = [[NSMutableDictionary alloc] init];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:352] forKey: @"21307"];
+                    break;
+                case 21307:
+                    busBeacon.neighbours = [[NSMutableDictionary alloc] init];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:67] forKey: @"42563"];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:269] forKey: @"44025"];
+                    [busBeacon.neighbours setObject: [[NSNumber alloc] initWithInt:167] forKey: @"38605"];
+                    break;
+            }
+            [self.beacons setObject:busBeacon forKey: [beacon.major stringValue]];
+
+        }
+    }
+    [self calculateNewDirection];
+    
+}
+
+- (void) printDebugInfo {
+    //self.debugLabelLeft.text = currentBeacon.id;
+    NSString * values = @"";
+    for (NSString *beaconID in path) {
+        BUSBeacon * beacon = [self.beacons objectForKey:beaconID];
+        values = [values stringByAppendingString:[NSString stringWithFormat:@"%@|", beacon.id]];
+    }
+    self.debugLabelRight.text = values;
 }
 
 /*

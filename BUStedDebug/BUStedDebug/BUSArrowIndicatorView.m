@@ -11,8 +11,10 @@
 
 
 
-@implementation BUSArrowIndicatorView
-UIImage *arrow;
+@implementation BUSArrowIndicatorView {
+    UIImage *arrow;
+    UIColor *circleColor;
+}
 
 
 - (id)initWithFrame:(CGRect)frame
@@ -23,6 +25,7 @@ UIImage *arrow;
         
         [self setBackgroundColor:[UIColor clearColor]];
         arrow = [UIImage imageNamed:@"arrow_smaller_black.png"];
+        circleColor = UIColorFromRGB(0xff0000);
     }
     return self;
 }
@@ -34,11 +37,21 @@ UIImage *arrow;
     //draw circle
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextAddEllipseInRect(ctx, rect);
-    CGContextSetFillColor(ctx, CGColorGetComponents([UIColorFromRGB(0xfde602) CGColor]));
+    CGContextSetFillColor(ctx, CGColorGetComponents([circleColor CGColor]));
     CGContextFillPath(ctx);
     
     
     [arrow drawInRect:rect];
+}
+
+- (void) reachedDestination {
+    circleColor = UIColorFromRGB(0x00CA70);
+    [self setNeedsDisplay];
+}
+
+- (void) startedNavigation {
+    circleColor = UIColorFromRGB(0xfde602);
+    [self setNeedsDisplay];
 }
 
 - (void)rotateArrowBy:(CGFloat) degrees {

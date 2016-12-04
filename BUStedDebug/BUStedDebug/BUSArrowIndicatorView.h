@@ -19,4 +19,8 @@ alpha:1.0]
 
 - (void)rotateArrowBy:(CGFloat) degrees;
 
+- (void) reachedDestination;
+
+- (void) startedNavigation;
+
 @end
