@@ -232,7 +232,8 @@
         // Speak baby
         if ([path count] > 0) {
             newAngle = [currentBeacon.neighbours objectForKey:[path objectAtIndex:0]];
-            NSString *text = [self getTextForSpeak:oldAngle - [newAngle doubleValue]];
+            double angleDifference = [self buildAngleDifference:oldAngle and: [newAngle doubleValue]];
+            NSString *text = [self getTextForSpeak:angleDifference];
             [self speak:text];
         }
     }
@@ -316,6 +317,14 @@
     }
     
     return GO_STRAIGHT;
+}
+
+- (double) buildAngleDifference:(double)oldAngle and:(double)newAngle {
+    if ((oldAngle <= 180 && newAngle <= 180) || (oldAngle > 180 && newAngle > 180)) {
+        return oldAngle - newAngle;
+    }
+    
+    return newAngle - oldAngle;
 }
 
 
