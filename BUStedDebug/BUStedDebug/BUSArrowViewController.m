@@ -232,8 +232,7 @@
         // Speak baby
         if ([path count] > 0) {
             newAngle = [currentBeacon.neighbours objectForKey:[path objectAtIndex:0]];
-            double angleDifference = [self buildAngleDifference:oldAngle and: [newAngle doubleValue]];
-            NSString *text = [self getTextForSpeak:angleDifference];
+            NSString *text = [self getTextForSpeak:[newAngle doubleValue] - oldAngle];
             [self speak:text];
         }
     }
@@ -310,23 +309,20 @@
 }
 
 - (NSString*) getTextForSpeak:(double)angleDifference {
+    if (angleDifference < -180) {
+        angleDifference += 360;
+    }
+    
+    if (angleDifference > 180) {
+        angleDifference -= 360;
+    }
+    
     if (angleDifference < 0) {
-        return TURN_RIGHT;
-    } else {
         return TURN_LEFT;
+    } else {
+        return TURN_RIGHT;
     }
-    
-    return GO_STRAIGHT;
 }
-
-- (double) buildAngleDifference:(double)oldAngle and:(double)newAngle {
-    if ((oldAngle <= 180 && newAngle <= 180) || (oldAngle > 180 && newAngle > 180)) {
-        return oldAngle - newAngle;
-    }
-    
-    return newAngle - oldAngle;
-}
-
 
 - (void)beaconManager:(KTKBeaconManager *)manager didStartMonitoringForRegion:(__kindof KTKBeaconRegion *)region {
     
